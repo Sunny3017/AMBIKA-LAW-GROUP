@@ -15,7 +15,7 @@ const Footer = () => {
               <img 
                 src="/footerlogo.png" 
                 alt="Ambika Law Group Logo" 
-                className="h-20 md:h-28 w-auto object-contain transform hover:scale-105 transition-transform duration-500" 
+                className="h-32 md:h-44 w-auto object-contain transform hover:scale-105 transition-transform duration-500" 
               />
             </Link>
             <p className="text-brand-ivory/50 font-lora text-sm leading-relaxed max-w-sm italic">
