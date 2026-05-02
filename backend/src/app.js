@@ -53,14 +53,15 @@ app.get('/', (req, res) => {
 
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+    const distPath = path.join(__dirname, '../../frontend/dist');
+    app.use(express.static(distPath));
 
-    app.get('*', (req, res) =>
-        res.sendFile(path.resolve(__dirname, '../../', 'frontend', 'dist', 'index.html'))
-    );
-} else {
-    app.get('/', (req, res) => {
-        res.send('API is running...');
+    app.get('*', (req, res, next) => {
+        // Skip API routes
+        if (req.url.startsWith('/api')) {
+            return next();
+        }
+        res.sendFile(path.resolve(distPath, 'index.html'));
     });
 }
 
