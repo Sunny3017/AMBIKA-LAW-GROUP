@@ -53,14 +53,13 @@ app.get('/api/health', (req, res) => {
 
 // --- FRONTEND SERVING ---
 if (process.env.NODE_ENV === 'production') {
-    const distPath = path.join(__dirname, '../../frontend/dist');
+    const distPath = path.resolve(__dirname, '..', '..', 'frontend', 'dist');
     
-    // Serve static files from the frontend build
+    // Serve static files
     app.use(express.static(distPath));
 
-    // For any request that doesn't match an API route, serve index.html
+    // For any GET request that doesn't match an API route or a static file, serve index.html
     app.get('*', (req, res) => {
-        // If the request starts with /api but didn't match any routes above, return 404
         if (req.url.startsWith('/api')) {
             return res.status(404).json({ message: 'API Route Not Found' });
         }
