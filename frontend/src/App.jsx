@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
@@ -21,7 +21,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   return (
-    <Router>
+    <HashRouter>
       <div className="custom-scrollbar selection:bg-brand-gold selection:text-brand-black">
         <div className="grain-overlay"></div>
         <Navbar />
@@ -43,7 +43,7 @@ function App() {
         <WhatsAppButton />
         <Footer />
       </div>
-    </Router>
+    </HashRouter>
   );
 }
 
