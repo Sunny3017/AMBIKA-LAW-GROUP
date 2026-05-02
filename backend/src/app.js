@@ -46,15 +46,20 @@ app.options('*', cors());
 app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 
+// Health check for deployment
+app.get('/api/health', (req, res) => {
+    res.status(200).send('API is running...');
+});
+
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
     const distPath = path.join(__dirname, '../../frontend/dist');
     app.use(express.static(distPath));
 
-    app.get('*', (req, res, next) => {
-        // Skip API routes
+    app.get('*', (req, res) => {
+        // Skip API routes manually if they don't match
         if (req.url.startsWith('/api')) {
-            return next();
+            return res.status(404).json({ message: 'API Route Not Found' });
         }
         res.sendFile(path.resolve(distPath, 'index.html'));
     });
