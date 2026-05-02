@@ -42,7 +42,7 @@ app.use(express.urlencoded({ extended: false }));
 // Pre-flight requests
 app.options('*', cors());
 
-// Routes
+// --- API ROUTES ---
 app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 
@@ -51,26 +51,29 @@ app.get('/api/health', (req, res) => {
     res.status(200).send('API is running...');
 });
 
-// Serve Frontend in Production
+// --- FRONTEND SERVING ---
 if (process.env.NODE_ENV === 'production') {
     const distPath = path.join(__dirname, '../../frontend/dist');
+    
+    // Serve static files from the frontend build
     app.use(express.static(distPath));
 
+    // For any request that doesn't match an API route, serve index.html
     app.get('*', (req, res) => {
-        // Skip API routes manually if they don't match
+        // If the request starts with /api but didn't match any routes above, return 404
         if (req.url.startsWith('/api')) {
             return res.status(404).json({ message: 'API Route Not Found' });
         }
         res.sendFile(path.resolve(distPath, 'index.html'));
     });
 } else {
-    // Root route for development
+    // Basic root route for development
     app.get('/', (req, res) => {
-        res.send('API is running...');
+        res.send('API is running in development mode...');
     });
 }
 
-// Error Handling Middleware
+// Error Handling Middleware (must be after all routes)
 app.use(notFound);
 app.use(errorHandler);
 
