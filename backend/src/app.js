@@ -46,11 +46,6 @@ app.options('*', cors());
 app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 
-// Root route
-app.get('/', (req, res) => {
-    res.send('API is running...');
-});
-
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
     const distPath = path.join(__dirname, '../../frontend/dist');
@@ -62,6 +57,11 @@ if (process.env.NODE_ENV === 'production') {
             return next();
         }
         res.sendFile(path.resolve(distPath, 'index.html'));
+    });
+} else {
+    // Root route for development
+    app.get('/', (req, res) => {
+        res.send('API is running...');
     });
 }
 
