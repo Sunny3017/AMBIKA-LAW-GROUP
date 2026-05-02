@@ -13,10 +13,26 @@ app.use(helmet({
 }));
 
 // CORS Configuration
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'https://ambikalawgroup.com',
+    'https://www.ambikalawgroup.com',
+    'http://localhost:5173',
+    'http://localhost:5174'
+];
+
 app.use(cors({
-    origin: '*', // For debugging, allow all. Change to specific domain after fix.
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            return callback(new Error('CORS Policy Error'), false);
+        }
+        return callback(null, true);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
 app.use(morgan('dev'));
